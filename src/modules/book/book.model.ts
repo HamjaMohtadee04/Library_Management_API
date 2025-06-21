@@ -9,7 +9,7 @@ export enum Genre {
   FANTASY = 'FANTASY',
 }
 
-// 1️⃣ Interface for a single Book document
+
 export interface IBook extends Document {
   title: string;
   author: string;
@@ -20,12 +20,12 @@ export interface IBook extends Document {
   available: boolean;
 }
 
-// 2️⃣ Interface for the static method
+
 export interface BookModelType extends Model<IBook> {
   handleBorrow(bookId: string, quantity: number): Promise<IBook>;
 }
 
-// 3️⃣ Schema definition
+
 const bookSchema = new Schema<IBook>(
   {
     title: {
@@ -64,7 +64,7 @@ const bookSchema = new Schema<IBook>(
   }
 );
 
-// 4️⃣ Static method
+
 bookSchema.statics.handleBorrow = async function (
   bookId: string,
   quantity: number
@@ -94,5 +94,5 @@ bookSchema.pre<IBook>('save', function (next) {
   next();
 });
 
-// 6️⃣ Export model with types
+
 export const Book = model<IBook, BookModelType>('Book', bookSchema);

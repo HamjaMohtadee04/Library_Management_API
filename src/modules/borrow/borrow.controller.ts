@@ -1,13 +1,13 @@
 import { Request, Response, NextFunction } from 'express';
 import { Borrow } from './borrow.model';
-import { Book } from '../book/book.model';  // <-- Make sure to import Book model here
+import { Book } from '../book/book.model';  
 import { sendResponse } from '../../utils/sendResponse';
 
 export const createBorrow = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { book: bookId, quantity, dueDate } = req.body;
 
-    // Find the book to borrow
+   
     const book = await Book.findById(bookId);
     if (!book) {
       return res.status(404).json({
@@ -25,12 +25,12 @@ export const createBorrow = async (req: Request, res: Response, next: NextFuncti
       });
     }
 
-    // Update book copies and availability
+ 
     book.copies -= quantity;
     if (book.copies === 0) book.available = false;
     await book.save();
 
-    // Create borrow record
+    
     const borrow = await Borrow.create({
       book: bookId,
       quantity,
