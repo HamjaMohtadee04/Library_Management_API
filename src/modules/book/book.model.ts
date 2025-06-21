@@ -1,54 +1,3 @@
-// import { Schema, model } from 'mongoose';
-
-// export enum Genre {
-//   FICTION = 'FICTION',
-//   NON_FICTION = 'NON_FICTION',
-//   SCIENCE = 'SCIENCE',
-//   HISTORY = 'HISTORY',
-//   BIOGRAPHY = 'BIOGRAPHY',
-//   FANTASY = 'FANTASY',
-// }
-
-// const bookSchema = new Schema(
-//   {
-//     title: {
-//       type: String,
-//       required: [true, 'Title is required'],
-//     },
-//     author: {
-//       type: String,
-//       required: [true, 'Author is required'],
-//     },
-//     genre: {
-//       type: String,
-//       required: [true, 'Genre is required'],
-//       enum: Object.values(Genre),
-//     },
-//     isbn: {
-//       type: String,
-//       required: [true, 'ISBN is required'],
-//       unique: true,
-//     },
-//     description: {
-//       type: String,
-//     },
-//     copies: {
-//       type: Number,
-//       required: [true, 'Copies is required'],
-//       min: [0, 'Copies must be a non-negative number'],
-//     },
-//     available: {
-//       type: Boolean,
-//       default: true,
-//     },
-//   },
-//   {
-//     timestamps: true,
-//   }
-// );
-
-// export const Book = model('Book', bookSchema);
-
 import { Schema, model, Document, Model } from 'mongoose';
 
 export enum Genre {
@@ -138,6 +87,12 @@ bookSchema.statics.handleBorrow = async function (
   return book;
 };
 
+// 5️⃣ Middleware: auto-trim title and author
+bookSchema.pre<IBook>('save', function (next) {
+  if (this.title) this.title = this.title.trim();
+  if (this.author) this.author = this.author.trim();
+  next();
+});
 
-// 5️⃣ Export model with generic types
+// 6️⃣ Export model with types
 export const Book = model<IBook, BookModelType>('Book', bookSchema);
